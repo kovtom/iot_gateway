@@ -1,0 +1,37 @@
+<mxfile host="app.diagrams.net" modified="2020-11-02T16:03:47.374Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36" etag="RLiGR2y_nEIRgPy-7BwL" version="13.8.8" type="github">
+  <diagram name="Page-1" id="74e2e168-ea6b-b213-b513-2b3c1d86103e">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="2336" background="#ffffff" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="7KSfrxkdd9NyB386JCqg-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.242;entryDx=0;entryDy=0;entryPerimeter=0;endArrow=diamond;endFill=1;" edge="1" parent="1" source="7KSfrxkdd9NyB386JCqg-7" target="7KSfrxkdd9NyB386JCqg-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="7KSfrxkdd9NyB386JCqg-7" value="MAC_header" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" vertex="1" parent="1">
+          <mxGeometry x="370" y="2020" width="200" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="7KSfrxkdd9NyB386JCqg-8" value="- dst_mac_addr: bytes&#xa;- src_mac_addr: bytes&#xa;- ether_type: bytes" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="7KSfrxkdd9NyB386JCqg-7">
+          <mxGeometry y="26" width="200" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="7KSfrxkdd9NyB386JCqg-9" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" vertex="1" parent="7KSfrxkdd9NyB386JCqg-7">
+          <mxGeometry y="80" width="200" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="7KSfrxkdd9NyB386JCqg-10" value="+ MAC_header(header(bytes)): bool&#xa;+ set_dst_mac_addr(bytes): bool&#xa;+ set_src_mac_addr(bytes): bool&#xa;+ set_ether_type(bytes): bool&#xa;+ get_dst_mac_addr(): bytes&#xa;+ get_src_mac_addr(): bytes&#xa;+ get_ether_type(): bytes&#xa;+ get_header(): bytes" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="7KSfrxkdd9NyB386JCqg-7">
+          <mxGeometry y="88" width="200" height="132" as="geometry" />
+        </mxCell>
+        <mxCell id="7KSfrxkdd9NyB386JCqg-11" value="Ethernet_frame" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" vertex="1" parent="1">
+          <mxGeometry x="627" y="2020" width="200" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="7KSfrxkdd9NyB386JCqg-12" value="+ header: MAC_header&#xa;- data: bytes" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="7KSfrxkdd9NyB386JCqg-11">
+          <mxGeometry y="26" width="200" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="7KSfrxkdd9NyB386JCqg-13" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" vertex="1" parent="7KSfrxkdd9NyB386JCqg-11">
+          <mxGeometry y="70" width="200" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="7KSfrxkdd9NyB386JCqg-14" value="+ MAC_header(header(bytes): bool&#xa;+ set_dst_mac_addr(bytes): bool&#xa;+ set_src_mac_addr(bytes): bool&#xa;+ set_ether_type(bytes): bool&#xa;+ get_dst_mac_addr(): bytes&#xa;+ get_src_mac_addr(): bytes&#xa;+ get_ether_type(): bytes&#xa;+ get_header(): bytes" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="7KSfrxkdd9NyB386JCqg-11">
+          <mxGeometry y="78" width="200" height="132" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
