@@ -79,6 +79,15 @@ try:
       print('target_mac_addr -> ', f.mac(arp_packet.get_element('target_mac_addr')))
       print('target_ip_addr -> ', f.ip(arp_packet.get_element('target_ip_addr')))
       print('*****************************************')
+
+      if f.OP[arp_packet.get_element('op').hex()] == 'ARP_request':
+        if not arp_packet.reply_packet() is None:
+          eth_frame.set_element('src_mac', arp_packet.get_element('sender_mac_addr'))
+          eth_frame.set_element('dst_mac', arp_packet.get_element('target_mac_addr'))
+          eth_frame.set_element('data', arp_packet.get_packet_all())
+          
+          tap.write(eth_frame.get_frame_all())
+
       
     packetnumber += 1
 

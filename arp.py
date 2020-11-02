@@ -29,6 +29,7 @@ class ARP_packet:
   
   def set_element(self, element, value):
     if isinstance(value, bytes):
+      self.__packet[element] = value
       if element == 'hard_type' and len(value) == 2:
         self.__packet_all = value + self.__packet_all[2:]
         return True
@@ -61,10 +62,25 @@ class ARP_packet:
 
   def reply_packet(self):
     if f.OP[self.__packet['op'].hex()] == 'ARP_request':
+      '''
       arp_reply_packet = ARP_packet(self.__packet_all)
       arp_reply_packet.set_element('op', b'\x00\x02')
-      arp_
-    
-    return b''
+      sender_mac_addr = arp_reply_packet.__packet['sender_mac_addr']
+      sender_ip_addr = arp_reply_packet.__packet['sender_ip_addr']
+      arp_reply_packet.set_element('sender_mac_addr', f.SELF_MAC)
+      arp_reply_packet.set_element('sender_ip_addr', arp_reply_packet.__packet['target_ip_addr'])
+      arp_reply_packet.set_element('target_mac_addr', sender_mac_addr)
+      arp_reply_packet.set_element('target_ip_addr', sender_ip_addr)
+      return arp_reply_packet.__packet_all
+      '''
+      self.set_element('op', b'\x00\x02')
+      sender_mac_addr = self.__packet['sender_mac_addr']
+      sender_ip_addr = self.__packet['sender_ip_addr']
+      self.set_element('sender_mac_addr', f.SELF_MAC)
+      self.set_element('sender_ip_addr', self.__packet['target_ip_addr'])
+      self.set_element('target_mac_addr', sender_mac_addr)
+      self.set_element('target_ip_addr', sender_ip_addr)
+      return self.__packet_all
+    return None
 
 
