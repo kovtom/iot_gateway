@@ -32,50 +32,47 @@ class MAC_Header:
     else:
       self.error()
   
+  @property
+  def dst_mac_addr(self):
+    return self.__dst_mac_addr
 
-  def set_dst_mac_addr(self, _dst_mac_addr):
-
+  @dst_mac_addr.setter
+  def dst_mac_addr(self, _dst_mac_addr):
     if isinstance(_dst_mac_addr, bytes) and len(_dst_mac_addr) == 6:
       self.__dst_mac_addr = _dst_mac_addr
-      return True
+      #return True
 
     else:
       self.error()
+  
+  @property
+  def src_mac_addr(self):
+    return self.__src_mac_addr
 
-
-  def set_src_mac_addr(self, _src_mac_addr):
+  @src_mac_addr.setter
+  def src_mac_addr(self, _src_mac_addr):
 
     if isinstance(_src_mac_addr, bytes) and len(_src_mac_addr) == 6:
       self.__src_mac_addr = _src_mac_addr
-      return True
 
     else:
       self.error()
 
+  @property
+  def eth_type(self):
+    return self.__eth_type
 
-  def set_eth_type(self, _eth_type):
+  @eth_type.setter
+  def eth_type(self, _eth_type):
 
     if isinstance(_eth_type, bytes) and len(_eth_type) == 2:
       self.__eth_type = _eth_type
-      return True
 
     else:
       self.error()
 
-
-  def get_dst_mac_addr(self):
-    return self.__dst_mac_addr
-
-
-  def get_src_mac_addr(self):
-    return self.__src_mac_addr
-  
-
-  def get_eth_type(self):
-    return self.__eth_type
-
-  
-  def get_header(self):
+  @property
+  def header(self):
     return self.__dst_mac_addr + self.__src_mac_addr + self.__eth_type 
 
 
@@ -98,33 +95,38 @@ class Ethernet_Frame:
     else:
       self.error()
   
-
-  def get_data(self):
+  @property
+  def data(self):
     return self.__data
 
-
-  def get_frame(self):
-    return self.mac_header.get_header() + self.__data
-    
-
-  def set_mac_header(self, _mac_header):
-
-    if isinstance(_mac_header, bytes) and len(_mac_header) == 14:
-      self.mac_header = MAC_Header(_mac_header)
-      return True
-
-    else:
-      self.error()
-
-
-  def set_data(self, _data):
+  @data.setter
+  def data(self, _data):
 
     if isinstance(_data, bytes) and len(_data) >= 28:
       self.__data = _data
-      return True
 
     else:
       self.error()
+  
+  @property
+  def frame(self):
+    return self.mac_header.header + self.__data
+    
+
+  @property
+  def mac_header(self):
+    return self.mac_header.header
+
+  @mac_header.setter
+  def mac_header(self, _mac_header):
+
+    if isinstance(_mac_header, bytes) and len(_mac_header) == 14:
+      self.mac_header = MAC_Header(_mac_header)
+
+    else:
+      self.error()
+
+
      
 
   def error(self):
