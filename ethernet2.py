@@ -91,6 +91,7 @@ class Ethernet_Frame:
     if isinstance(_eth_frame, bytes) and len(_eth_frame) >= MIN_ETH_FRAME_LEN:
       self.mac_header = MAC_Header(_eth_frame[:14])
       self.__data = _eth_frame[14:]
+      
 
     else:
       self.error()
