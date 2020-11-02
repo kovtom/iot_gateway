@@ -85,13 +85,13 @@ class Ethernet_Frame:
   Ethernet keret tipus
   '''
   def __init__(self, _eth_frame=TEMP_HEADER+TEMP_DATA):
-    self.mac_header = MAC_Header()
+    self.__mac_header = MAC_Header()
     self.__data = bytes()
 
     if isinstance(_eth_frame, bytes) and len(_eth_frame) >= MIN_ETH_FRAME_LEN:
-      self.mac_header = MAC_Header(_eth_frame[:14])
+      self.__mac_header = MAC_Header(_eth_frame[:14])
       self.__data = _eth_frame[14:]
-      
+
 
     else:
       self.error()
@@ -111,24 +111,49 @@ class Ethernet_Frame:
   
   @property
   def frame(self):
-    return self.mac_header.header + self.__data
+    return self.__mac_header.header + self.__data
     
 
   @property
-  def mac_header(self):
-    return self.mac_header.header
+  def header(self):
+    return self.__mac_header.header
 
-  @mac_header.setter
-  def mac_header(self, _mac_header):
+  @header.setter
+  def header(self, _mac_header):
 
     if isinstance(_mac_header, bytes) and len(_mac_header) == 14:
-      self.mac_header = MAC_Header(_mac_header)
+      self.__mac_header = MAC_Header(_mac_header)
 
     else:
       self.error()
 
 
-     
+  @property
+  def dst_mac_addr(self):
+    return self.__mac_header.dst_mac_addr
+  
+  @dst_mac_addr.setter
+  def dst_mac_addr(self, _dst_mac_addr):
+    self.__mac_header.dst_mac_addr = _dst_mac_addr
+
+
+  @property
+  def src_mac_addr(self):
+    return self.__mac_header.src_mac_addr
+  
+  @src_mac_addr.setter
+  def src_mac_addr(self, _src_mac_addr):
+    self.__mac_header.src_mac_addr = _src_mac_addr
+
+
+  @property
+  def eth_type(self):
+    return self.__mac_header.eth_type
+
+  @eth_type.setter
+  def eth_type(self, _eth_type):
+    self.__mac_header.eth_type = _eth_type
+
 
   def error(self):
     raise TypeError("A megadott ertek nem 'bytes' tipus, vagy nem megfelelo hosszusagu")

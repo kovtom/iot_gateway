@@ -78,16 +78,16 @@ Ethernet_Frame test
 '''
 def test_Ethernet_Frame__get_mac_header():
   eth_frame = e.Ethernet_Frame(ETH_RAW_FRAME)
-  assert eth_frame.mac_header.header == b'"3DUfw\x00\x11"3DU\x08\x06'
+  assert eth_frame.header == b'"3DUfw\x00\x11"3DU\x08\x06'
 
 def test_Ethernet_Frame__get_data():
   eth_frame = e.Ethernet_Frame(ETH_RAW_FRAME)
   assert eth_frame.data == b'\x00\x01\x08\x00\x06\x04\x00\x01\x00\x11"3DU\n\x14\x01\x01\x00\x00\x00\x00\x00\x00\n\x14\x01\x02'
 
-def test_Ethernet_Frame__set_mac_header():
+def test_Ethernet_Frame__set_header():
   eth_frame = e.Ethernet_Frame(ETH_RAW_FRAME)
-  eth_frame.mac_header = ETH_OTHER_RAW_HEADER
-  assert eth_frame.mac_header.header == ETH_OTHER_RAW_HEADER
+  eth_frame.header = ETH_OTHER_RAW_HEADER
+  assert eth_frame.header == ETH_OTHER_RAW_HEADER
 
 def test_Ethernet_Frame__set_data():
   eth_frame = e.Ethernet_Frame(ETH_RAW_FRAME)
@@ -97,3 +97,20 @@ def test_Ethernet_Frame__set_data():
 def test_Ethernet_Frame__get_frame():
   eth_frame = e.Ethernet_Frame(ETH_RAW_FRAME)
   assert eth_frame.frame == ETH_RAW_FRAME
+
+# b'"3DUfw \x00\x11"3DU \x08\x06 \x00\x01\x08\x00\x06\x04\x00\x01\x00\x11"3DU\n\x14\x01\x01\x00\x00\x00\x00\x00\x00\n\x14\x01\x02'
+
+def test_Ethernet_Frame__dst_mac_addr():
+  eth_frame = e.Ethernet_Frame(ETH_RAW_FRAME)
+  assert eth_frame.dst_mac_addr == b'"3DUfw'
+
+def test_Ethernet_Frame__src_mac_addr():
+  eth_frame = e.Ethernet_Frame(ETH_RAW_FRAME)
+  assert eth_frame.src_mac_addr == b'\x00\x11"3DU'
+
+def test_Ethernet_Frame__eth_type():
+  eth_frame = e.Ethernet_Frame(ETH_RAW_FRAME)
+  assert eth_frame.eth_type == b'\x08\x06'
+
+
+
