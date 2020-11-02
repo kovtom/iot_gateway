@@ -3,7 +3,7 @@ from pytun import TunTapDevice, IFF_TAP, IFF_NO_PI # pylint: disable=no-name-in-
 import pytun
 import struct
 import zlib
-import ethernet as eth
+import ethernet2 as eth
 import formatting as f
 import arp
 
@@ -55,19 +55,25 @@ packetnumber = 0
 try:
   while(True):
     raw_packet = tap.read(tap.mtu)  # buf = tun.read(tun.mtu)
-    eth_frame = eth.Ether_frame(raw_packet)
-    
+    #eth_frame = eth.Ether_frame(raw_packet)
+    eth_frame = eth.Ethernet_Frame(raw_packet)
+
     print('----------Ethernet frame--------------')
     print('Packet number:', packetnumber)
-    print('src_mac -> ', f.mac(eth_frame.get_element('src_mac')))
-    print('dst_mac -> ', f.mac(eth_frame.get_element('dst_mac')))
-    print('eth type ->', f.ETHER_TYPE[eth_frame.get_element('type').hex()])
-    print('data ->', eth_frame.get_element('data').hex())
-    print('raw_data ->', eth_frame.get_frame_all().hex())
+    #print('src_mac -> ', f.mac(eth_frame.get_element('src_mac')))
+    print('src_mac -> ', f.mac(eth_frame.mac_header.get_src_mac_addr()))
+    #print('dst_mac -> ', f.mac(eth_frame.get_element('dst_mac')))
+    print('dst_mac -> ', f.mac(eth_frame.mac_header.get_dst_mac_addr()))
+    #print('eth type ->', f.ETHER_TYPE[eth_frame.get_element('type').hex()])
+    print('eth type ->', f.ETHER_TYPE[eth_frame.mac_header.get_eth_type().hex()])
+    #print('data ->', eth_frame.get_element('data').hex())
+    print('data ->', eth_frame.get_data().hex())
+    #print('raw_data ->', eth_frame.get_frame_all().hex())
+    print('ethernet_frame ->', eth_frame.get_frame().hex())
     print('***************************************')
 
-    if f.ETHER_TYPE[eth_frame.get_element('type').hex()] == 'ARP':
-      arp_packet = arp.ARP_packet(eth_frame.get_element('data'))
+    if f.ETHER_TYPE[eth_frame.mac_header.get_eth_type().hex()] == 'ARP':
+      arp_packet = arp.ARP_packet(eth_frame.get_data())
       print('-------------ARP packet------------------')
       print('hard_type -> ', f.HARD_TYPE[arp_packet.get_element('hard_type').hex()])
       print('prot_type -> ', f.PROT_TYPE[arp_packet.get_element('prot_type').hex()])
@@ -82,11 +88,11 @@ try:
 
       if f.OP[arp_packet.get_element('op').hex()] == 'ARP_request':
         if not arp_packet.reply_packet() is None:
-          eth_frame.set_element('src_mac', arp_packet.get_element('sender_mac_addr'))
-          eth_frame.set_element('dst_mac', arp_packet.get_element('target_mac_addr'))
-          eth_frame.set_element('data', arp_packet.get_packet_all())
+          eth_frame.mac_header.set_src_mac_addr(arp_packet.get_element('sender_mac_addr'))
+          eth_frame.mac_header.set_dst_mac_addr(arp_packet.get_element('target_mac_addr'))
+          eth_frame.set_data(arp_packet.get_packet_all())
           
-          tap.write(eth_frame.get_frame_all())
+          tap.write(eth_frame.get_frame())
 
       
     packetnumber += 1
