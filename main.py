@@ -6,11 +6,18 @@ import zlib
 import ethernet2 as eth
 import formatting as f
 import arp
+import logging
 
 DEVICE_NAME = 'tap72'
 #DEVICE_NAME = 'tun72'
 SUCCESS = 0
 ERROR = -1
+
+logging.basicConfig(level=logging.DEBUG)
+log = logging.getLogger(__name__)
+
+
+log.debug('Start: %s , Filename: %s', __name__, __file__)
 
 print('Create TAP device. Name = <'+DEVICE_NAME+'>')
 try:
@@ -73,7 +80,7 @@ try:
     print('***************************************')
 
     if f.ETHER_TYPE[eth_frame.eth_type.hex()] == 'ARP':
-      arp_packet = arp.ARP_packet(eth_frame.get_data())
+      arp_packet = arp.ARP_packet(eth_frame.data)
       print('-------------ARP packet------------------')
       print('hard_type -> ', f.HARD_TYPE[arp_packet.get_element('hard_type').hex()])
       print('prot_type -> ', f.PROT_TYPE[arp_packet.get_element('prot_type').hex()])
@@ -88,11 +95,11 @@ try:
 
       if f.OP[arp_packet.get_element('op').hex()] == 'ARP_request':
         if not arp_packet.reply_packet() is None:
-          eth_frame.mac_header.set_src_mac_addr(arp_packet.get_element('sender_mac_addr'))
-          eth_frame.mac_header.set_dst_mac_addr(arp_packet.get_element('target_mac_addr'))
-          eth_frame.set_data(arp_packet.get_packet_all())
+          eth_frame.src_mac_addr = arp_packet.get_element('sender_mac_addr')
+          eth_frame.dst_mac_addr = arp_packet.get_element('target_mac_addr')
+          eth_frame.data = arp_packet.get_packet_all()
           
-          tap.write(eth_frame.get_frame())
+          tap.write(eth_frame.frame)
 
       
     packetnumber += 1

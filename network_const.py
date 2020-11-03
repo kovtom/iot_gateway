@@ -37,3 +37,9 @@ OP = {
   '0008' : 'InARP_request',
   '0009' : 'InARP_reply'
 }
+
+def get_key_code(_dict, _value):
+  try:
+    return int(list(_dict.keys())[list(_dict.values()).index(_value)], 16).to_bytes(length=2, byteorder='big', signed=False)
+  except ValueError:
+    return None
