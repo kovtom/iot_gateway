@@ -1,4 +1,5 @@
 import network_const as n
+import formatting as f
 
 '''
 Konstansok
@@ -157,3 +158,12 @@ class Ethernet_Frame:
 
   def error(self):
     raise TypeError("A megadott ertek nem 'bytes' tipus, vagy nem megfelelo hosszusagu")
+
+  
+  def __repr__(self):
+    name = __name__
+    smac = f.mac(self.src_mac_addr)
+    dmac = f.mac(self.dst_mac_addr)
+    etype = n.ETHER_TYPE[self.eth_type.hex()]
+    return ('%s: <smac: %s dmac: %s etype: %s>'
+            % (name, smac, dmac, etype))

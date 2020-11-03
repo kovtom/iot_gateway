@@ -1,7 +1,10 @@
 import formatting as f
 from network_const import *
+import logging
 
 TEMP_ARP_PACKET = b'\x00' * 28
+
+log = logging.getLogger(__name__)
 
 class ARP_packet:
   """
@@ -166,3 +169,12 @@ class ARP_packet:
     raise TypeError('A megadott tipus nem <bytes> vagy nem megfelelo hosszusagu')
 
 
+  def __repr__(self):
+    name = __name__
+    smac = f.mac(self.sender_mac_addr)
+    sip = f.ip(self.sender_ip_addr)
+    dmac = f.mac(self.target_mac_addr)
+    dip = f.ip(self.target_ip_addr)
+    op = OP[self.op.hex()]
+    return ('%s: <smac: %s sip: %s dmac: %s dip: %s op: %s>'
+            % (name, smac, sip, dmac, dip, op))

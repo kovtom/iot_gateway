@@ -62,42 +62,19 @@ packetnumber = 0
 try:
   while(True):
     raw_packet = tap.read(tap.mtu)  # buf = tun.read(tun.mtu)
-    #eth_frame = eth.Ether_frame(raw_packet)
     eth_frame = eth.Ethernet_Frame(raw_packet)
-
-    print('----------Ethernet frame--------------')
-    print('Packet number:', packetnumber)
-    #print('src_mac -> ', f.mac(eth_frame.get_element('src_mac')))
-    print('src_mac -> ', f.mac(eth_frame.src_mac_addr))
-    #print('dst_mac -> ', f.mac(eth_frame.get_element('dst_mac')))
-    print('dst_mac -> ', f.mac(eth_frame.dst_mac_addr))
-    #print('eth type ->', f.ETHER_TYPE[eth_frame.get_element('type').hex()])
-    print('eth type ->', f.ETHER_TYPE[eth_frame.eth_type.hex()])
-    #print('data ->', eth_frame.get_element('data').hex())
-    print('data ->', eth_frame.data.hex())
-    #print('raw_data ->', eth_frame.get_frame_all().hex())
-    print('ethernet_frame ->', eth_frame.frame.hex())
-    print('***************************************')
-
+    print(str(eth_frame))
+    
     if f.ETHER_TYPE[eth_frame.eth_type.hex()] == 'ARP':
       arp_packet = arp.ARP_packet(eth_frame.data)
-      print('-------------ARP packet------------------')
-      print('hard_type -> ', f.HARD_TYPE[arp_packet.hard_type.hex()])
-      print('prot_type -> ', f.PROT_TYPE[arp_packet.prot_type.hex()])
-      print('hard_size -> ', arp_packet.hard_size.hex())
-      print('prot_size -> ', arp_packet.prot_size.hex())
-      print('op -> ', f.OP[arp_packet.hard_type.hex()])
-      print('sender_mac_addr -> ', f.mac(arp_packet.sender_mac_addr))
-      print('sender_ip_addr -> ', f.ip(arp_packet.sender_ip_addr))
-      print('target_mac_addr -> ', f.mac(arp_packet.target_mac_addr))
-      print('target_ip_addr -> ', f.ip(arp_packet.target_ip_addr))
-      print('*****************************************')
+      print(str(arp_packet))
 
       if f.OP[arp_packet.op.hex()] == 'ARP_request':
         if arp_packet.conv_reply_packet():
           eth_frame.src_mac_addr = arp_packet.sender_mac_addr
           eth_frame.dst_mac_addr = arp_packet.target_mac_addr
           eth_frame.data = arp_packet.packet
+          print(str(arp_packet))
         
         tap.write(eth_frame.frame)
 
