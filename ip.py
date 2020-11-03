@@ -85,5 +85,78 @@ class Header:
   def total_length(self, _total_length):
     self.__total_length = _total_length
 
+
+  @property
+  def id(self):
+    return self.__id
+
+  @id.setter
+  def id(self, _id):
+    self.__id = _id
+
+
+  @property
+  def flags(self):
+    return self.__flags
+
+  @flags.setter
+  def flags(self, _flags):
+    self.__flags = _flags
+
+
+  @property
+  def fragment_offset(self):
+    return self.__fragment_offset
+
+  @fragment_offset.setter
+  def fragment_offset(self, _fragment_offset):
+    self.__fragment_offset = _fragment_offset
+
+
+  @property
+  def ttl(self):
+    return self.__ttl
+
+  @ttl.setter
+  def ttl(self, _ttl):
+    self.__ttl = _ttl
+
+
+  @property
+  def proto(self):
+    return self.__proto
+
+  @proto.setter
+  def proto(self, _proto):
+    self.__proto = _proto
+
+
+  @property
+  def checksum(self):
+    return self.__checksum
+
+  @checksum.setter
+  def checksum(self, _checksum):
+    self.__checksum = _checksum
+
+  
+  @property
+  def src_ip_addr(self):
+    return self.__src_ip_addr
+
+  @src_ip_addr.setter
+  def src_ip_addr(self, _src_ip_addr):
+    self.__src_ip_addr = _src_ip_addr
+
+
+  @property
+  def dst_ip_addr(self):
+    return self.__dst_ip_addr
+
+  @dst_ip_addr.setter
+  def dst_ip_addr(self, _dst_ip_addr):
+    self.__dst_ip_addr = _dst_ip_addr
+
+  
   
   
