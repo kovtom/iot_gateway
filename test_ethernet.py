@@ -1,7 +1,3 @@
-import ethernet
-import arp
-import formatting as f
-
 '''
 ---------------------------------------
 Packet number: 51
@@ -45,66 +41,76 @@ ethertype_str -> ARP
 data -> 00010800060400022233445566770a1401020011223344550a140101
 ***************************************
 '''
-  
-def test_Ether_frame_init():
-  raw_frame = b'"3DUfw\x00\x11"3DU\x08\x06\x00\x01\x08\x00\x06\x04\x00\x01\x00\x11"3DU\n\x14\x01\x01\x00\x00\x00\x00\x00\x00\n\x14\x01\x02'
-  eth = ethernet.Ether_frame(raw_frame)
-  assert eth.get_frame_all() == raw_frame
 
-def test_Ether_frame_dst_mac():
-  raw_frame = b'"3DUfw\x00\x11"3DU\x08\x06\x00\x01\x08\x00\x06\x04\x00\x01\x00\x11"3DU\n\x14\x01\x01\x00\x00\x00\x00\x00\x00\n\x14\x01\x02'
-  eth = ethernet.Ether_frame(raw_frame)
-  assert eth.get_element('dst_mac') == b'"3DUfw'
-  #assert eth.get_mac_f('dst_mac') == '2233.4455.6677'
-  assert f.mac(eth.get_element('dst_mac')) == '2233.4455.6677'
+import ethernet as e
 
-def test_Ether_frame_src_mac():
-  raw_frame = b'"3DUfw\x00\x11"3DU\x08\x06\x00\x01\x08\x00\x06\x04\x00\x01\x00\x11"3DU\n\x14\x01\x01\x00\x00\x00\x00\x00\x00\n\x14\x01\x02'
-  eth = ethernet.Ether_frame(raw_frame)
-  assert eth.get_element('src_mac') == b'\x00\x11"3DU'
+ETH_RAW_FRAME = b'"3DUfw\x00\x11"3DU\x08\x06\x00\x01\x08\x00\x06\x04\x00\x01\x00\x11"3DU\n\x14\x01\x01\x00\x00\x00\x00\x00\x00\n\x14\x01\x02'
+ETH_RAW_HEADER = b'"3DUfw\x00\x11"3DU\x08\x06'
+ETH_OTHER_RAW_HEADER = b'\xaa\xbb\xcc\xdd\xee\xff\x00\x11"3DU\x08\x06'
+ETH_OTHER_DATA = b'x00\x01\x08\x00\x06\x04\x00\x01\x00\x11"3DU\n\x14\x01\x02\x00\x00\x00\x00\x00\x00\n\x14\x01\x02'
+'''
+MAC_Header test
+'''
+def test_MAC_Header__get_header():
+  mac_header = e.MAC_Header(ETH_RAW_HEADER)
+  assert mac_header.header == ETH_RAW_HEADER
 
-def test_Ether_frame_eth_type():
-  raw_frame = b'"3DUfw\x00\x11"3DU\x08\x06\x00\x01\x08\x00\x06\x04\x00\x01\x00\x11"3DU\n\x14\x01\x01\x00\x00\x00\x00\x00\x00\n\x14\x01\x02'
-  eth = ethernet.Ether_frame(raw_frame)
-  assert eth.get_element('type').hex() == '0806'
-  #assert eth.get_type_f('0806') == 'ARP'
-  assert f.ETHER_TYPE['0806'] == 'ARP'
+def test_MAC_Header__dst_mac_addr():
+  mac_header = e.MAC_Header(ETH_RAW_HEADER)
+  assert mac_header.dst_mac_addr == b'"3DUfw'
+  mac_header.dst_mac_addr = b'\xaa\xbb\xcc\xdd\xee\xff'
+  assert mac_header.dst_mac_addr == b'\xaa\xbb\xcc\xdd\xee\xff'
 
-def test_Ether_frame_eth_data():
-  raw_frame = b'"3DUfw\x00\x11"3DU\x08\x06\x00\x01\x08\x00\x06\x04\x00\x01\x00\x11"3DU\n\x14\x01\x01\x00\x00\x00\x00\x00\x00\n\x14\x01\x02'
-  eth = ethernet.Ether_frame(raw_frame)
-  assert eth.get_element('data') == b'\x00\x01\x08\x00\x06\x04\x00\x01\x00\x11"3DU\n\x14\x01\x01\x00\x00\x00\x00\x00\x00\n\x14\x01\x02'
+def test_MAC_Header__src_mac_addr():
+  mac_header = e.MAC_Header(ETH_RAW_HEADER)
+  assert mac_header.src_mac_addr == b'\x00\x11"3DU'
+  mac_header.src_mac_addr = b'\xaa\xbb\xcc\xdd\xee\xff'
+  assert mac_header.src_mac_addr == b'\xaa\xbb\xcc\xdd\xee\xff'
 
-#rawpacket.hex() -> 223344556677 001122334455 0806 00010800060400010011223344550a1401010000000000000a140102
+def test_MAC_Header__eth_type():
+  mac_header = e.MAC_Header(ETH_RAW_HEADER)
+  assert mac_header.eth_type == b'\x08\x06'
+  mac_header.eth_type = b'\xaa\xbb'
+  assert mac_header.eth_type == b'\xaa\xbb'
 
-def test_Ether_frame_set_element_dst_mac():
-  raw_frame = b'"3DUfw\x00\x11"3DU\x08\x06\x00\x01\x08\x00\x06\x04\x00\x01\x00\x11"3DU\n\x14\x01\x01\x00\x00\x00\x00\x00\x00\n\x14\x01\x02'
-  eth = ethernet.Ether_frame(raw_frame)
-  assert not eth.set_element('dst_mac', 2)
-  assert eth.set_element('dst_mac', b'\xaa\xbb\xcc\xdd\xee\xff')
-  assert eth.get_frame_all().hex() == 'aabbccddeeff001122334455080600010800060400010011223344550a1401010000000000000a140102'
-  assert not eth.set_element('dst_mac', b'\xbb\xcc\xdd\xee\xff')
+'''
+Ethernet_Frame test
+'''
+def test_Ethernet_Frame__get_mac_header():
+  eth_frame = e.Ethernet_Frame(ETH_RAW_FRAME)
+  assert eth_frame.header == b'"3DUfw\x00\x11"3DU\x08\x06'
 
-def test_Ether_frame_set_element_src_mac():
-  raw_frame = b'"3DUfw\x00\x11"3DU\x08\x06\x00\x01\x08\x00\x06\x04\x00\x01\x00\x11"3DU\n\x14\x01\x01\x00\x00\x00\x00\x00\x00\n\x14\x01\x02'
-  eth = ethernet.Ether_frame(raw_frame)
-  assert not eth.set_element('src_mac', 2)
-  assert eth.set_element('src_mac', b'\xaa\xbb\xcc\xdd\xee\xff')
-  assert eth.get_frame_all().hex() == '223344556677aabbccddeeff080600010800060400010011223344550a1401010000000000000a140102'
-  assert not eth.set_element('src_mac', b'\xbb\xcc\xdd\xee\xff')
+def test_Ethernet_Frame__get_data():
+  eth_frame = e.Ethernet_Frame(ETH_RAW_FRAME)
+  assert eth_frame.data == b'\x00\x01\x08\x00\x06\x04\x00\x01\x00\x11"3DU\n\x14\x01\x01\x00\x00\x00\x00\x00\x00\n\x14\x01\x02'
 
-def test_Ether_frame_set_element_eth_type():
-  raw_frame = b'"3DUfw\x00\x11"3DU\x08\x06\x00\x01\x08\x00\x06\x04\x00\x01\x00\x11"3DU\n\x14\x01\x01\x00\x00\x00\x00\x00\x00\n\x14\x01\x02'
-  eth = ethernet.Ether_frame(raw_frame)
-  assert not eth.set_element('type', 2)
-  assert eth.set_element('type', b'\x08\x00')
-  assert eth.get_frame_all().hex() == '223344556677001122334455080000010800060400010011223344550a1401010000000000000a140102'
-  assert not eth.set_element('type', b'\xbb')
+def test_Ethernet_Frame__set_header():
+  eth_frame = e.Ethernet_Frame(ETH_RAW_FRAME)
+  eth_frame.header = ETH_OTHER_RAW_HEADER
+  assert eth_frame.header == ETH_OTHER_RAW_HEADER
 
-def test_Ether_frame_set_element_eth_data():
-  raw_frame = b'"3DUfw\x00\x11"3DU\x08\x06\x00\x01\x08\x00\x06\x04\x00\x01\x00\x11"3DU\n\x14\x01\x01\x00\x00\x00\x00\x00\x00\n\x14\x01\x02'
-  eth = ethernet.Ether_frame(raw_frame)
-  assert not eth.set_element('data', 2)
-  assert eth.set_element('data', b'\xff\xff\xaa\xaa\xbb\xbb')
-  assert eth.get_frame_all().hex() == '2233445566770011223344550806ffffaaaabbbb'
-  assert not eth.set_element('data', b'')
+def test_Ethernet_Frame__set_data():
+  eth_frame = e.Ethernet_Frame(ETH_RAW_FRAME)
+  eth_frame.data = ETH_OTHER_DATA
+  assert eth_frame.data == ETH_OTHER_DATA
+
+def test_Ethernet_Frame__get_frame():
+  eth_frame = e.Ethernet_Frame(ETH_RAW_FRAME)
+  assert eth_frame.frame == ETH_RAW_FRAME
+
+# b'"3DUfw \x00\x11"3DU \x08\x06 \x00\x01\x08\x00\x06\x04\x00\x01\x00\x11"3DU\n\x14\x01\x01\x00\x00\x00\x00\x00\x00\n\x14\x01\x02'
+
+def test_Ethernet_Frame__dst_mac_addr():
+  eth_frame = e.Ethernet_Frame(ETH_RAW_FRAME)
+  assert eth_frame.dst_mac_addr == b'"3DUfw'
+
+def test_Ethernet_Frame__src_mac_addr():
+  eth_frame = e.Ethernet_Frame(ETH_RAW_FRAME)
+  assert eth_frame.src_mac_addr == b'\x00\x11"3DU'
+
+def test_Ethernet_Frame__eth_type():
+  eth_frame = e.Ethernet_Frame(ETH_RAW_FRAME)
+  assert eth_frame.eth_type == b'\x08\x06'
+
+
+
